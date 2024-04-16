@@ -18,6 +18,22 @@ void print_metadata(mr_ctx_t *ctx)
     printf("          Width: %d\n", mr_get_width(ctx));
     printf("         Height: %d\n", mr_get_height(ctx));
     printf("      Bit depth: %d\n", mr_get_bits_per_pixel(ctx));
+
+    uint32_t cfa_pattern = mr_get_cfa_pattern(ctx);
+
+    if (cfa_pattern == 0x01000201) {
+        printf("    CFA pattern: gbrg\n");
+    }
+    else if (cfa_pattern == 0x00010102) {
+        printf("    CFA pattern: bggr\n");
+    }
+    else if (cfa_pattern == 0x01020001) {
+        printf("    CFA pattern: grbg\n");
+    }
+    else {  // 0x02010100
+        printf("    CFA pattern: rggb\n");
+    }
+
     printf("    Black level: %d\n", mr_get_black_level(ctx));
     printf("    White level: %d\n", mr_get_white_level(ctx));
 
@@ -63,8 +79,10 @@ void print_metadata(mr_ctx_t *ctx)
 }
 
 //-----------------------------------------------------------------------------
-void cmp_meta_data(uint32_t frame_idx, const mr_frame_data_t *a, const mr_frame_data_t *b)
+void cmp_meta_data(uint32_t frame_idx, mr_frame_data_t *a, mr_frame_data_t *b)
 {
+    a->timestamp = b->timestamp = 0;
+
     int cmp = memcmp(a, b, sizeof(mr_frame_data_t));
 
     // Metadata blocks are identical
