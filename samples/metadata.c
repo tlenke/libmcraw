@@ -17,7 +17,8 @@ void print_metadata(mr_ctx_t *ctx)
 
     printf("          Width: %d\n", mr_get_width(ctx));
     printf("         Height: %d\n", mr_get_height(ctx));
-    printf("      Bit depth: %d\n", mr_get_bits_per_pixel(ctx));
+    printf(" Bits per pixel: %d\n", mr_get_bits_per_pixel(ctx));
+    printf("  Stored format: raw%d\n", mr_get_stored_format(ctx));
 
     uint32_t cfa_pattern = mr_get_cfa_pattern(ctx);
 
@@ -100,8 +101,8 @@ void cmp_meta_data(uint32_t frame_idx, mr_frame_data_t *a, mr_frame_data_t *b)
         printf("   Org Resolution: %d x %d  ->  %d x %d\n", a->original_width, a->original_height, b->original_width, b->original_height);
     }
 
-    if (a->bits_per_pixel != b->bits_per_pixel) {
-        printf("        Bit depth: %d  ->  %d\n", a->bits_per_pixel, b->bits_per_pixel);
+    if (a->stored_pixel_format != b->stored_pixel_format) {
+        printf("    Stored format: %d  ->  %d\n", a->stored_pixel_format, b->stored_pixel_format);
     }
 
     if (a->iso != b->iso) {
