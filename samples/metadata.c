@@ -9,6 +9,8 @@
 // Read and decode a mcraw file
 // output metadata
 
+#define MEASURE_TIME 1
+
 //-----------------------------------------------------------------------------
 void print_metadata(mr_ctx_t *ctx)
 {
@@ -130,6 +132,14 @@ void cmp_meta_data(uint32_t frame_idx, mr_frame_data_t *a, mr_frame_data_t *b)
 }
 
 //-----------------------------------------------------------------------------
+int64_t get_time_monotonic()
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+}
+
+//-----------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
     mr_ctx_t *ctx;
@@ -195,10 +205,18 @@ int main(int argc, const char * argv[])
                 cmp_meta_data(i, &prev_meta_data, &meta_data);
                 prev_meta_data = meta_data;
 
+#if MEASURE_TIME
+                int64_t t0 = get_time_monotonic();
+#endif
                 bayer_frame_size = mr_decode_video_frame(raw_data, pkt_frame.data, pkt_frame.size, width, height);
                 if (bayer_frame_size == 0) {
                     break;
                 }
+
+#if MEASURE_TIME
+                int64_t d = get_time_monotonic() - t0;
+                printf("decoding : %ldus\n", d);
+#endif
             }
         }
 
