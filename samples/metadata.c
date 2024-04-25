@@ -9,7 +9,7 @@
 // Read and decode a mcraw file
 // output metadata
 
-#define MEASURE_TIME 1
+#define MEASURE_TIME 0
 
 //-----------------------------------------------------------------------------
 void print_metadata(mr_ctx_t *ctx)

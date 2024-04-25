@@ -9,4 +9,4 @@ add_executable(export_audio samples/export_audio.c lib/mcraw.c lib/RawData.cpp)
 target_link_libraries(metadata uuid)
 target_link_libraries(export_audio uuid)
 
-add_compile_options(-Wall -Wextra -pedantic -Werror -O3)
+add_compile_options(-Wall -Wextra -pedantic -Werror -O2)
